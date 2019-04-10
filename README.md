@@ -179,5 +179,3 @@ class Test_Login:
     def test_login_1(self, username, pwd):
         self.obj.login(username, pwd)
 ```
-
-
