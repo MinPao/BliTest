@@ -68,7 +68,40 @@ def init_driver():
     return driver
 ```
 
-3.元素定位
+3.方法类
+```
+# base.py
+
+from selenium.webdriver.support.wait import WebDriverWait
+
+class Base:
+    def __init__(self, driver):
+        self.driver = driver
+
+    def find_element(self, location, timeout=10, poll=0.5):
+        """
+        :param location:By.ID之类的属性
+        :param timeout:超时时间
+        :param poll:调用until或until_not的间隔时间
+        :return:
+        """
+        return WebDriverWait(self.driver, timeout, poll).until(lambda x:x.find_element(*location))
+
+    def find_elements(self, location, timeout=10, poll=0.5):
+        return WebDriverWait(self.driver, timeout, poll).until(lambda x:x.find_elements(*location))
+
+    # 点击操作
+    def click_element(self, location):
+        self.find_element(location).click()
+
+    # 输入操作
+    def input_text(self, location, text):
+        input = self.find_element(location)
+        input.clear()
+        input.send_keys(text)
+```
+
+4.元素定位
 ```
 # __init__.py
 
@@ -87,7 +120,7 @@ clk_userpwd = (By.ID, "userpwd")
 clk_login_btn = (By.ID, "btn_login")
 ```
 
-4.登录类
+5.登录类
 ```
 # login.py
 
@@ -116,7 +149,7 @@ class Login(Base):
         self.click_element(packages.clk_login_btn)
 ```
 
-5.实现登录
+6.实现登录
 ```
 # test_login.py
 
@@ -146,3 +179,5 @@ class Test_Login:
     def test_login_1(self, username, pwd):
         self.obj.login(username, pwd)
 ```
+
+
